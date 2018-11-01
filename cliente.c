@@ -6,9 +6,22 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <string.h>
+#include <pthread.h>
+	
+pthread_t tid;
+int sockfd;
+
+void *coneccion(void *arg)
+{
+	char msg[100];	
+	while(1 == 1){
+		read(sockfd, &msg, sizeof(msg)*sizeof(char));
+		printf("%s \n", msg);
+	}
+}
+
 int main()
 {
-	int sockfd;
 	int len;
 	struct sockaddr_in address;
 	int result;
@@ -33,8 +46,8 @@ int main()
 	strtok(nick, "\n");
 //	printf("mandando nick...\n");	
 	write(sockfd, &nick, sizeof(nick)*sizeof(char));
-//	pthread_create(&tid[totcltes],NULL,coneccion_clte,(void *)
-	while(1==1){
+	pthread_create(&tid,NULL,coneccion,NULL);
+	while(1==1) {
 		printf("Message:");
 		fgets (msg, 100, stdin);
 		strtok(msg, "\n");
@@ -49,9 +62,6 @@ int main()
 			write(sockfd, &msg, sizeof(msg)*sizeof(char));
 		}
 //		printf("leyendo mensaje repetido\n");
-		read(sockfd, &msg, sizeof(msg)*sizeof(char));
-		printf("%s \n", msg);
-
 	}
 	close(sockfd);
 	exit(0);
