@@ -32,7 +32,7 @@ int main()
 	listen(server_sockfd, 5);
 	while(totcltes<MAX_CLIENT)
 	{
-		printf("server esperando, clientes atendidos %d\n",totcltes);
+//		printf("server esperando, clientes atendidos %d\n",totcltes);
 		/* Aceptar conexión */
 		client_sockfd[totcltes] = accept(server_sockfd,(struct sockaddr *)
 		&client_address, &client_len);
@@ -53,7 +53,7 @@ void *coneccion_clte(void *arg)
 	char msg[100];
 	int *n=(int *) arg;
 	int mynum=*n;
-	printf("escuchando en: %d, %d", mynum, client_sockfd[mynum]);
+//	printf("escuchando en: %d, %d", mynum, client_sockfd[mynum]);
 //	printf("leyendo nick\n");
 	read(client_sockfd[mynum], &nick, sizeof(nick)*sizeof(char));
 	printf("%s is online\n", nick);
@@ -61,16 +61,19 @@ void *coneccion_clte(void *arg)
 	while(1==1){
 //		printf("escuchando en: %d, %d", mynum, client_sockfd[mynum]);
 //		printf("leyendo mensaje\n");
+//		read(client_sockfd[mynum], &nick, sizeof(nick)*sizeof(char));
 		read(client_sockfd[mynum], &msg, sizeof(msg)*sizeof(char));
 //		printf("msg: %s",msg );		
 		if(strcmp(msg, "exit") == 0){
+			printf("%s is offline\n", nick);
 			break;
 		}
 		for(int i=0;i<MAX_CLIENT;i++)
 		{
 			if(i!=mynum && client_sockfd[i]>=0){
-				printf("enviando a %d\n",i);
+//				printf("enviando a %d\n",i);
 //				printf("devolviendo mensaje\n");
+//				write(client_sockfd[i], &nick, sizeof(nick)*sizeof(char));
 				write(client_sockfd[i], &msg, sizeof(msg)*sizeof(char));
 //				printf("esperando mensaje...\n");
 			}

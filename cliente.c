@@ -13,11 +13,15 @@ int sockfd;
 
 void *coneccion(void *arg)
 {
+	char nick[100];
 	char msg[100];	
 	while(1 == 1){
+//		read(sockfd, &nick, sizeof(nick)*sizeof(char));
 		read(sockfd, &msg, sizeof(msg)*sizeof(char));
-		printf("%s \n", msg);
+		printf("\n%s\n", msg);
+		printf("\nMessage: ");
 	}
+
 }
 
 int main()
@@ -41,6 +45,7 @@ int main()
 	char nick[100];
 	char src_nick[100];
 	char msg[100];
+	char send[200] = "";
 	printf("Nick:");
 	fgets (nick, 100, stdin);
 	strtok(nick, "\n");
@@ -48,18 +53,25 @@ int main()
 	write(sockfd, &nick, sizeof(nick)*sizeof(char));
 	pthread_create(&tid,NULL,coneccion,NULL);
 	while(1==1) {
-		printf("Message:");
+		printf("\nMessage:");
 		fgets (msg, 100, stdin);
 		strtok(msg, "\n");
+		memset(send,0,200);
 		if(strcmp(msg, "exit") == 0){
 //			printf("te saco pues\n");
 //			printf("mandando mensaje\n");
-			write(sockfd, &msg, sizeof(msg)*sizeof(char));
+//			write(sockfd, &nick, sizeof(nick)*sizeof(char));
+			strcat(send,"exit");
+			write(sockfd, &send, sizeof(send)*sizeof(char));
 			break;
 		}
 		else{
 //			printf("mandando mensaje\n");
-			write(sockfd, &msg, sizeof(msg)*sizeof(char));
+//			write(sockfd, &nick, sizeof(nick)*sizeof(char));
+			strcat(send,nick);
+			strcat(send,":");
+			strcat(send,msg);
+			write(sockfd, &send, sizeof(send)*sizeof(char));
 		}
 //		printf("leyendo mensaje repetido\n");
 	}
